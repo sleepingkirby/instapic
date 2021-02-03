@@ -1,13 +1,10 @@
 <?php
 require('./includes/urlParse.php');
+require('./includes/auth.php');
+require('./config/mariadb_cnf.php');
 
-$url = new urlParse();
-$url->main();
 
-var_dump($_SERVER);
-$url->varDump();
-var_dump($_POST);
-var_dump($_FILES);
+
 /*
 data in:
 username
@@ -30,7 +27,13 @@ url query
 //curl -i -H "Accept: application/json" -H "Content-Type: application/json" http://hostname/resource
 //curl -X POST -d @filename http://hostname/resource
 
+
+
 //query parser
+$url = new urlParse();
+$url->main();
+$url->varDump();
+
 
 //auth module
 /*
@@ -48,7 +51,7 @@ login();//also handles relogin
 isLoggedIn(); //keep alive
 logout();//clear session data
 */
-
+$auth=new auth($db['user'], $db['pass'], $db['db'], $db['host']);
 
 //data retriever
 
