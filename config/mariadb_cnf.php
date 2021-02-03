@@ -1,6 +1,6 @@
 <?php
-$db['user']="instapic";
-$db['pass']="instapicPass";
-$db['db']="instapic";
-$db['host']="localhost";
+$_db['user']="instapic";
+$_db['pass']="instapicPass";
+$_db['db']="instapic";
+$_db['host']="localhost";
 ?>

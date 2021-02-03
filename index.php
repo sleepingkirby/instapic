@@ -2,6 +2,7 @@
 require('./includes/urlParse.php');
 require('./includes/auth.php');
 require('./config/mariadb_cnf.php');
+require('./config/auth_cnf.php');
 
 
 
@@ -35,6 +36,7 @@ $url->main();
 $url->varDump();
 
 
+
 //auth module
 /*
   If a user is not logged in, the only actions available are
@@ -51,7 +53,9 @@ login();//also handles relogin
 isLoggedIn(); //keep alive
 logout();//clear session data
 */
-$auth=new auth($db['user'], $db['pass'], $db['db'], $db['host']);
+$auth=new auth($_db['user'], $_db['pass'], $_db['db'], $_db['host'], $_auth['tknLen']);
+
+var_dump($auth->loggedIn("testUser", 'cf354b38bda38a10172b7ae3c25a5390d8dbc60803375e8a5a'));
 
 //data retriever
 

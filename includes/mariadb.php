@@ -39,7 +39,7 @@ connects and reads the results from the query and returns it in an array
     
     $results=mysqli_query($this->obj,$query);
       if(!$results){
-        return 0;
+        return false;
       }
 
     $x=0;
@@ -68,10 +68,6 @@ post: results, if any
 ---------------------------------------------------------------*/  
   function write($query){
     $results=mysqli_query($this->obj,$query);
-    $error=mysqli_error($this->obj);
-    if($error){
-      return $error;
-    } 
     return $results;
   }
 
