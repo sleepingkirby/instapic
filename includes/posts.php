@@ -12,23 +12,6 @@ protected $fileLoc;
     parent::__destruct();
   }
 
-/*
-+----------+---------------+------+-----+---------------------+-------------------------------+
-| Field    | Type          | Null | Key | Default             | Extra                         |
-+----------+---------------+------+-----+---------------------+-------------------------------+
-| id       | bigint(20)    | NO   | PRI | NULL                | auto_increment                |
-| usersId  | int(11)       | YES  | MUL | NULL                |                               |
-| filePath | varchar(255)  | YES  |     | NULL                |                               |
-| w        | int(11)       | YES  |     | NULL                |                               |
-| h        | int(11)       | YES  |     | NULL                |                               |
-| format   | varchar(10)   | YES  |     | NULL                |                               |
-| title    | varchar(100)  | YES  |     | NULL                |                               |
-| descrip  | varchar(2000) | YES  |     | NULL                |                               |
-| tags     | text          | YES  |     | NULL                |                               |
-| datetime | timestamp     | NO   | MUL | current_timestamp() | on update current_timestamp() |
-+----------+---------------+------+-----+---------------------+-------------------------------+
-*/
-
   /*---------------------------------
   pre: sqlClass
   post: file moved into proper directory and db entry set
@@ -70,7 +53,7 @@ protected $fileLoc;
       return $rtrn;
     }
     
-    $status=$this->write('insert into img(usersId, filePath, title, descrip, tags, datetime) values('.$userInfo[0]['id'].', "'.$this->fileLoc.$fname.'","'.$title.'", "'.$descr.'", "'.$tags.'", current_timestamp())');
+    $status=$this->write('insert into img(usersId, filePath, format, title, descrip, tags, datetime) values('.$userInfo[0]['id'].', "'.$this->fileLoc.$fname.'","'.strtolower(end($exArr)).'","'.$title.'", "'.$descr.'", "'.$tags.'", current_timestamp())');
 
     if(!$status){
     $rtrn['msg']="File uploaded, but unable to make entry in database.";
@@ -94,7 +77,7 @@ protected $fileLoc;
     $rtrn['msg']="Unable able to get images";
    
  
-    $stmnt="select * from img";
+    $stmnt="select id,format,title,descrip,tags,datetime from img";
     $sub="";
 
       if(is_array($filter) && array_key_exists('username', $filter)){
@@ -120,7 +103,33 @@ protected $fileLoc;
     return $rtrn;
   }
 
+  /*-------------------------------
+  pre: none 
+  post: none
+  sends out the image in binary
+  -------------------------------*/
+  public function getPic($id){
+    $img=$this->read('select id, datetime, filePath,format from img where id='.$this->escape($id));
+    if(!$img){
+    error_log("attempted to get file with id: ".$this->escape($id).", file doesn't exist.");
+    die();
+    }
+    if (file_exists($img[0]['filePath'])) {
 
+        header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
+        header("Cache-Control: public"); // needed for internet explorer
+        header("Content-Type: image/".$img[0]['format']);
+        header("Content-Transfer-Encoding: Binary");
+        header("Content-Length:".filesize($img[0]['filePath']));
+        header("Content-Disposition: attachment; filename=".basename($img[0]['filePath']));
+        readfile($img[0]['filePath']);
+        die();        
+    } else {
+        error_log("Error: File \"".$img[0]['filePath']."\" not found.");
+        die();
+    } 
+  }
+  
 }
 
 ?>

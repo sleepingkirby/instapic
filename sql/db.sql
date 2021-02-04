@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `img`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `img` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `usersId` int(11) DEFAULT NULL,
+  `usersId` int(11) NOT NULL,
   `filePath` varchar(255) DEFAULT NULL,
   `w` int(11) DEFAULT NULL,
   `h` int(11) DEFAULT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE `img` (
   KEY `datetime` (`datetime`),
   KEY `usersId` (`usersId`),
   CONSTRAINT `img_ibfk_1` FOREIGN KEY (`usersId`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,14 +87,15 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(80) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
   `token` varchar(100) DEFAULT NULL,
   `datetime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `last_login` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `last_failed_login` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ip` varchar(80) DEFAULT NULL,
-  `timeout` int(11) DEFAULT NULL,
+  `timeout` int(11) DEFAULT 30,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,6 +104,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (4,'testUser','$2y$10$Tfdqf5MDOfA0fdGru6v5WuCFunBpYWZ57v/h3jLkrconwKTcIIgKm','active','testtkn','2021-02-04 14:35:26','2021-02-04 05:22:14','0000-00-00 00:00:00','127.0.0.1',50);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -115,4 +117,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-03 14:17:48
+-- Dump completed on 2021-02-04 22:36:58
