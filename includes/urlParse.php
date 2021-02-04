@@ -7,6 +7,8 @@ class urlParse{
 public $resp;
 public $act;
 public $url;
+public $user;
+public $tkn;
 public $urlObj;
 
   public function __construct(){
@@ -20,7 +22,16 @@ public $urlObj;
     $this->resp['500']='Internal Server Error.';
     $this->url="";
     $this->act="";
-    
+    $this->user="";
+    $this->tkn="";
+    $arr=apache_request_headers();
+      if(array_key_exists('Authorization', $arr)){
+      $this->tkn=$arr["Authorization"];
+      }
+
+      if(array_key_exists('Username', $arr)){
+      $this->user=$arr["Username"];
+      }
   }
 
   public function varDump(){

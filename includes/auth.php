@@ -155,7 +155,7 @@ public $statusArr;
     //time out logic. datetime is returned as unix timestamp
     if(time() >= $userInfo[0]['datetime']+($userInfo[0]['timeout']*60)){
       $rtrn['msg']="Session timed out.";
-      $this->logout();
+      $this->logout($u, $tkn);
       return $rtrn;
     }
 
