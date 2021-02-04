@@ -53,9 +53,14 @@ login();//also handles relogin
 isLoggedIn(); //keep alive
 logout();//clear session data
 */
-$auth=new auth($_db['user'], $_db['pass'], $_db['db'], $_db['host'], $_auth['tknLen']);
+$auth=new auth($_db['user'], $_db['pass'], $_db['db'], $_db['host'], $_auth['tknLen'], $_auth['status']);
 
-var_dump($auth->loggedIn("testUser", 'cf354b38bda38a10172b7ae3c25a5390d8dbc60803375e8a5a'));
+var_dump($auth->register('testUser','testPass', 'active', 50));
+$status=$auth->login('testUser', 'testPass');
+var_dump($status);
+var_dump($auth->loggedIn("testUser", $status['tkn']));
+var_dump($auth->logout("testUser", $status['tkn']));
+
 
 //data retriever
 

@@ -3,10 +3,11 @@ require('./includes/mariadb.php');
 
 class auth extends sqlClass{
 public $tknLen;
-
-  public function __construct($u, $p, $db, $h, $tl){
+public $statusArr;
+  public function __construct($u, $p, $db, $h, $tl, $sa){
     parent::__construct($u, $p, $db, $h);
     $this->tknLen=$tl;
+    $this->statusArr=$sa;
   }
 
   public function __destruct(){
@@ -70,6 +71,7 @@ public $tknLen;
 
       $rtrn['status']=true;
       $rtrn['msg']="Logged in";
+      $rtrn['tkn']=$tkn;
       return $rtrn;
     }
     else{
@@ -87,16 +89,29 @@ public $tknLen;
   post: user session created (token made, user table updated)
   if password is valid, set user session and return token
   ---------------------------------------------------------*/
-  public function logout($u){
+  public function logout($u, $tkn){
     $rtrn['status']=false;
     $rtrn['msg']="Logout failed";
 
-    if(!$u){
-    $rtrn['msg']="no username provided. Unable to log out";
+    if(!$u||!$tkn){
+    $rtrn['msg']="no username or token provided. Unable to log out";
     return $rtrn;
     }
 
-    if($this->write("update users set token=\"\", ip=\"\" where username=\"".$this->escape($u)."\"")){
+    $userInfo=$this->read("select id, password, status, token, datetime, ip, timeout from users where username=\"".$this->escape($u)."\"");
+
+    if($userInfo==false){
+    $rtrn['msg']="User doesn't exist.";
+    return $rtrn;
+    }
+
+    //wrong token. Logging another person out is a form of DDOS attack. Preventing this. 
+    if($userInfo[0]['token']!=$tkn){
+    $rtrn['msg']="Unable to logout";
+    return $rtrn;
+    }
+
+    if($userInfo[0]['token']==$tkn && $this->write("update users set token=\"\", ip=\"\" where username=\"".$this->escape($u)."\"")){
     $rtrn['status']=true;
     $rtrn['msg']="Logged out successfully.";
     return $rtrn;    
@@ -129,7 +144,8 @@ public $tknLen;
       return $rtrn;
     }
 
-    //username is right, but token is wrong. Can be a spoofing attempt. Do nothing. Tell the attempt that  
+    //username is right, but token is wrong. Can be a spoofing attempt. Do nothing. Tell the attempt that 
+    
     if($userInfo[0]['token']!=$tkn || $userInfo[0]['ip']!=$_SERVER['REMOTE_ADDR']){
       $rtrn['msg']="Session not valid.";
       return $rtrn;
@@ -156,6 +172,51 @@ public $tknLen;
     }
 
     return $rtrn;
+  }
+
+  //register for account.
+  public function register($u, $p, $status, $timeout){
+    $rtrn['status']=false;
+    $rtrn['msg']="Registration failed.";
+
+    //all values are required
+    if(!$u||!$p||!$status||!$timeout){
+      $rtrn['msg']="Registration needs username, password, status and timeout number.";
+      return $rtrn;
+    }
+
+
+    $userInfo=$this->read("select id, username, status, datetime from users where username=\"".$this->escape($u)."\"");
+   
+    if(is_array($userInfo) && count($userInfo)>=1){
+      $rtrn['msg']="User already exists";
+      return $rtrn;
+    }
+
+    //if all values are of correct type
+    if(array_key_exists($status, $this->statusArr) && is_numeric($timeout)){
+      $back=$this->write('insert into users(username, password, status, timeout) values("'.$u.'", "'.password_hash($p, PASSWORD_DEFAULT).'", "'.$status.'", '.$timeout.')');
+      if($back==false){
+      $rtrn['msg']="Registration failed: ".$this->obj->error;
+      return $rtrn;
+      }
+
+      $rtrn['status']=true;
+      $rtrn['msg']="Registration successful";
+
+      return $rtrn;
+    }
+
+ 
+    if(!array_key_exists($status, $this->statusArr)){
+      $rtrn['msg'].="Status provided not valid.";
+    }
+  
+    if(!is_numeric($timeout)){
+      $rtrn['msg'].="Timeout is not a number.";
+    }
+
+  return $rtrn;
   }
 
 
