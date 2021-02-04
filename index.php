@@ -79,11 +79,6 @@ switch($url->urlObj[0]){
     }
   break;
   case "posts":
-/*
-  if user is logged in, they can
-  a) upload (/posts/post, POST), modify posts(/posts/post/<id>, PUT)
-  b) get a list of all posts (/posts/list , GET)
-*/
     $userInfo=$auth->loggedIn($url->user, $url->tkn);
     //if the session is not valid, go no further.
     if(!$userInfo['status']){
@@ -132,9 +127,11 @@ switch($url->urlObj[0]){
         return null;
         break;
         default:
+        //clear;curl -H "Authorization: testtkn" -H "Username: testUser" http://sleepingkirby.local/posts/3 --output ./tmp.png
           if(is_numeric($url->urlObj[1])){
           $posts->getPic($url->urlObj[1]);
           }
+        return null;
         break;
       }
     }
