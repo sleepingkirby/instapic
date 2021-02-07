@@ -79,7 +79,6 @@ switch($url->urlObj[0]){
     }
   break;
   case "posts":
-
     $posts=new posts($_db['user'], $_db['pass'], $_db['db'], $_db['host'], $_posts['fileLoc']);
     if(count($url->urlObj)==2){
       switch($url->urlObj[1]){
@@ -113,6 +112,13 @@ switch($url->urlObj[0]){
         return null;
         break;
         case "list":
+        $userInfo=$auth->loggedIn($url->user, $url->tkn);
+          //if the session is not valid, go no further.
+          if(!$userInfo['status']){
+          echo json_encode($userInfo);
+          return null;
+          }
+
         //clear;curl -F 'json={"username":"testUser", "sort":"datetime"}' http://sleepingkirby.local/posts/list
           $json="";
           if(array_key_exists('json',$_POST)){
