@@ -49,7 +49,7 @@ protected $fileLoc;
     $fname=uniqid().'.'.end($exArr);//generating filename
 
     if(!move_uploaded_file($_FILES['file']["tmp_name"], $this->fileLoc.$fname)){
-      $rtrn['msg']="Upload failed when moving file to destionation";
+      $rtrn['msg']="Upload failed when moving file to destination";
       return $rtrn;
     }
     
@@ -77,14 +77,11 @@ protected $fileLoc;
     $rtrn['msg']="Unable able to get images";
    
  
-    $stmnt="select id,format,title,descrip,tags,datetime from img";
+    $stmnt="select id,usersId,userName,format,title,descrip,tags,datetime from view_img";
     $sub="";
 
       if(is_array($filter) && array_key_exists('username', $filter)){
-        $userInfo=$this->read("select id, UNIX_TIMESTAMP(datetime) as datetime, token, ip, timeout from users where username=\"".$this->escape($filter['username'])."\"");
-        if($userInfo){
         $sub.=" where usersId=".$userInfo[0]['id'];
-        }
       }
     
       if(is_array($filter) && array_key_exists('sort', $filter)){

@@ -43,7 +43,7 @@ return null;
 }
 
 
-$post=array('username'=>"", 'password'=>"", 'active'=>"", 'timeout'=>0);
+$post=array('password'=>"", 'active'=>"", 'timeout'=>0);
   if(array_key_exists('json',$_POST)){
   $post=array_merge($post, json_decode($_POST['json'], true));//makes default keys exist
   }
@@ -57,21 +57,21 @@ switch($url->urlObj[0]){
     switch($url->urlObj[1]){
       case "register":
         if($url['act']=="POST"){
-          echo json_encode($auth->register($post['username'],$post['password'], $post['status'], $post['timeout']));
+          echo json_encode($auth->register($post['password'], $post['status'], $post['timeout']));
           return null;
         }
       break;
       default:
         //attempt to login
-        if(is_string($url->urlObj[1])&&array_key_exists(2,$url->urlObj)&&$url->urlObj[2]=="login"&&$url['act']=="POST"){
+        if(is_string($url->urlObj[1])&&array_key_exists(2,$url->urlObj)&&$url->urlObj[2]=="login"&&$url->act=="POST"){
         echo json_encode($auth->login($url->urlObj[1], $post['password']));
         return null;
         }
-        elseif(is_string($url->urlObj[1])&&array_key_exists(2,$url->urlObj)&&$url->urlObj[2]=="logout"&&$url['act']=="PATCH"){
+        elseif(is_string($url->urlObj[1])&&array_key_exists(2,$url->urlObj)&&$url->urlObj[2]=="logout"&&$url->act=="PATCH"){
         echo json_encode($auth->logout($url->urlObj[1], $url->tkn));
         return null;
         }
-        elseif(is_string($url->urlObj[1])&&array_key_exists(2,$url->urlObj)&&$url->urlObj[2]=="loggedIn"&&$url['act']=="PATCH"){
+        elseif(is_string($url->urlObj[1])&&array_key_exists(2,$url->urlObj)&&$url->urlObj[2]=="loggedIn"&&$url->act=="PATCH"){
         echo json_encode($auth->loggedIn($url->urlObj[1], $url->tkn));//this function keeps the session alive. Why have it available? For the option to do no action, but keep the session alive.
         return null;
         }
@@ -90,7 +90,7 @@ switch($url->urlObj[0]){
     if(count($url->urlObj)==2){
       switch($url->urlObj[1]){
         case "post":
-        //clear;curl -F 'json={"title":"testfile", "descr":"testfile description", "tags":"test,test2"}' -F "file=@/home/sleepingkirby/tmp.txt" -H "Authorization: testtkn" -H "Username: testUser" http://sleepingkirby.local/posts/post
+        //clear;curl -F 'json={"title":"testfile", "descr":"testfile description", "tags":"test,test2"}' -F "file=@/home/sleepingkirby/Pictures/EalqtfJXYAswGVP.png" -H "Authorization: testtkn" -H "Username: testUser" http://sleepingkirby.local/posts/post
           if(!is_array($_POST)||!array_key_exists('json',$_POST)){
             $rtrn['status']=false;
             $rtrn['msg']="Data model for picture missing.";
