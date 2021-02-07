@@ -79,17 +79,18 @@ switch($url->urlObj[0]){
     }
   break;
   case "posts":
-    $userInfo=$auth->loggedIn($url->user, $url->tkn);
-    //if the session is not valid, go no further.
-    if(!$userInfo['status']){
-    echo json_encode($userInfo);
-    return null;
-    }
 
     $posts=new posts($_db['user'], $_db['pass'], $_db['db'], $_db['host'], $_posts['fileLoc']);
     if(count($url->urlObj)==2){
       switch($url->urlObj[1]){
         case "post":
+        $userInfo=$auth->loggedIn($url->user, $url->tkn);
+          //if the session is not valid, go no further.
+          if(!$userInfo['status']){
+          echo json_encode($userInfo);
+          return null;
+          }
+
         //clear;curl -F 'json={"title":"testfile", "descr":"testfile description", "tags":"test,test2"}' -F "file=@/home/sleepingkirby/Pictures/EalqtfJXYAswGVP.png" -H "Authorization: testtkn" -H "Username: testUser" http://sleepingkirby.local/posts/post
           if(!is_array($_POST)||!array_key_exists('json',$_POST)){
             $rtrn['status']=false;
@@ -112,7 +113,7 @@ switch($url->urlObj[0]){
         return null;
         break;
         case "list":
-        //clear;curl -F 'json={"username":"testUser", "sort":"datetime"}' -H "Authorization: testtkn" -H "Username: testUser" http://sleepingkirby.local/posts/list
+        //clear;curl -F 'json={"username":"testUser", "sort":"datetime"}' http://sleepingkirby.local/posts/list
           $json="";
           if(array_key_exists('json',$_POST)){
             $json=json_decode($_POST['json'], true);
@@ -127,7 +128,8 @@ switch($url->urlObj[0]){
         return null;
         break;
         default:
-        //clear;curl -H "Authorization: testtkn" -H "Username: testUser" http://sleepingkirby.local/posts/3 --output ./tmp.png
+
+        //clear;curl http://sleepingkirby.local/posts/3 --output ./tmp.png
           if(is_numeric($url->urlObj[1])){
           $posts->getPic($url->urlObj[1]);
           }

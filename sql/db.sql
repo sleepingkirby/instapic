@@ -37,7 +37,7 @@ CREATE TABLE `img` (
   KEY `datetime` (`datetime`),
   KEY `usersId` (`usersId`),
   CONSTRAINT `img_ibfk_1` FOREIGN KEY (`usersId`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,6 +46,7 @@ CREATE TABLE `img` (
 
 LOCK TABLES `img` WRITE;
 /*!40000 ALTER TABLE `img` DISABLE KEYS */;
+INSERT INTO `img` VALUES (3,4,'/home/sleepingkirby/dev/httpd/pics/601c0791c02da.png',NULL,NULL,'png','Test title','testfile description','test,test2','2021-02-07 13:37:05');
 /*!40000 ALTER TABLE `img` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,9 +105,51 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (4,'testUser','$2y$10$Tfdqf5MDOfA0fdGru6v5WuCFunBpYWZ57v/h3jLkrconwKTcIIgKm','active','testtkn','2021-02-04 14:35:26','2021-02-04 05:22:14','0000-00-00 00:00:00','127.0.0.1',50);
+INSERT INTO `users` VALUES (4,'testUser','$2y$10$Tfdqf5MDOfA0fdGru6v5WuCFunBpYWZ57v/h3jLkrconwKTcIIgKm','active','bef5dace562f3f85ce59dedf8f481de0225ba07b89e8ed5bfd','2021-02-07 13:38:50','2021-02-07 12:39:23','0000-00-00 00:00:00','192.168.1.162',50);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `view_img`
+--
+
+DROP TABLE IF EXISTS `view_img`;
+/*!50001 DROP VIEW IF EXISTS `view_img`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `view_img` (
+  `id` tinyint NOT NULL,
+  `usersId` tinyint NOT NULL,
+  `userName` tinyint NOT NULL,
+  `filePath` tinyint NOT NULL,
+  `w` tinyint NOT NULL,
+  `h` tinyint NOT NULL,
+  `format` tinyint NOT NULL,
+  `title` tinyint NOT NULL,
+  `descrip` tinyint NOT NULL,
+  `tags` tinyint NOT NULL,
+  `datetime` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view `view_img`
+--
+
+/*!50001 DROP TABLE IF EXISTS `view_img`*/;
+/*!50001 DROP VIEW IF EXISTS `view_img`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`instapic`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `view_img` AS select `img`.`id` AS `id`,`img`.`usersId` AS `usersId`,`users`.`username` AS `userName`,`img`.`filePath` AS `filePath`,`img`.`w` AS `w`,`img`.`h` AS `h`,`img`.`format` AS `format`,`img`.`title` AS `title`,`img`.`descrip` AS `descrip`,`img`.`tags` AS `tags`,`img`.`datetime` AS `datetime` from (`img` left join `users` on(`img`.`usersId` = `users`.`id`)) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -117,4 +160,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-04 22:36:58
+-- Dump completed on 2021-02-07 22:03:36

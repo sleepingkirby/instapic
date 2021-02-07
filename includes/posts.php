@@ -118,7 +118,7 @@ protected $fileLoc;
         header("Content-Type: image/".$img[0]['format']);
         header("Content-Transfer-Encoding: Binary");
         header("Content-Length:".filesize($img[0]['filePath']));
-        header("Content-Disposition: attachment; filename=".basename($img[0]['filePath']));
+        //header("Content-Disposition: attachment; filename=".basename($img[0]['filePath']));
         readfile($img[0]['filePath']);
         die();        
     } else {
