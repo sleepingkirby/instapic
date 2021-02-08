@@ -42,7 +42,6 @@ if(count($url->urlObj)<=0 || $url->urlObj[0]=="" ||$url->urlObj[0]==null||$url->
 return null;
 }
 
-
 $post=array('password'=>"", 'active'=>"", 'timeout'=>0);
   if(array_key_exists('json',$_POST)){
   $post=array_merge($post, json_decode($_POST['json'], true));//makes default keys exist
@@ -63,11 +62,13 @@ switch($url->urlObj[0]){
       break;
       default:
         //attempt to login
+        //curl -F 'json={"password":"password"}' -X POST http://domain/users/username/login
         if(is_string($url->urlObj[1])&&array_key_exists(2,$url->urlObj)&&$url->urlObj[2]=="login"&&$url->act=="POST"){
         echo json_encode($auth->login($url->urlObj[1], $post['password']));
         return null;
         }
         elseif(is_string($url->urlObj[1])&&array_key_exists(2,$url->urlObj)&&$url->urlObj[2]=="logout"&&$url->act=="PATCH"){
+        //clear;curl -v -H "Authorization: 01102033beb353adefa963e71dac3ae83b5e17fe3808ae93af" -H "Username: testUser" -X PATCH http://sleepingkirby.local/users/testUser/logout
         echo json_encode($auth->logout($url->urlObj[1], $url->tkn));
         return null;
         }

@@ -75,19 +75,25 @@ protected $fileLoc;
   public function get($filter){
     $rtrn['status']=false;
     $rtrn['msg']="Unable able to get images";
-   
+    ob_start();
+    var_dump($filter);
+    $out=ob_get_clean();
+    error_log("============>");
+    error_log($out); 
  
     $stmnt="select id,usersId,userName,format,title,descrip,tags,datetime from view_img";
     $sub="";
 
-      if(is_array($filter) && array_key_exists('username', $filter)){
-        $sub.=" where usersId=".$userInfo[0]['id'];
+      if(is_array($filter) && array_key_exists('username', $filter) && $filter['username']){
+        $sub.=" where userName=\"".$this->escape($filter['username'])."\"";
       }
     
-      if(is_array($filter) && array_key_exists('sort', $filter)){
+      if(is_array($filter) && array_key_exists('sort', $filter) && $filter['sort']){
         $sub.=" order by datetime desc";
       }
       $status=$this->read($stmnt.$sub);
+      
+      error_log($stmnt.$sub);
 
       if($status==false){
         $rtrn['msg']="Unable to retrieve from database.";
