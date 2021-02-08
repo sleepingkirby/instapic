@@ -55,8 +55,9 @@ switch($url->urlObj[0]){
     } 
     switch($url->urlObj[1]){
       case "register":
-        if($url['act']=="POST"){
-          echo json_encode($auth->register($post['password'], $post['status'], $post['timeout']));
+      //curl -v -F 'json={"username":"testUser2", "password":"password", "status":"active", "timeout":"50"}' -X POST http://sleepingkirby.local/users/register
+        if($url->act=="POST"){
+          echo json_encode($auth->register($post['username'],$post['password'], $post['status'], $post['timeout']));
           return null;
         }
       break;
