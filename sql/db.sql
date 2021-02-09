@@ -37,7 +37,7 @@ CREATE TABLE `img` (
   KEY `datetime` (`datetime`),
   KEY `usersId` (`usersId`),
   CONSTRAINT `img_ibfk_1` FOREIGN KEY (`usersId`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,6 @@ CREATE TABLE `img` (
 
 LOCK TABLES `img` WRITE;
 /*!40000 ALTER TABLE `img` DISABLE KEYS */;
-INSERT INTO `img` VALUES (3,4,'/home/sleepingkirby/dev/httpd/pics/601c0791c02da.png',NULL,NULL,'png','Test title','testfile description','test,test2','2021-02-07 13:37:05');
 /*!40000 ALTER TABLE `img` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,7 +95,7 @@ CREATE TABLE `users` (
   `ip` varchar(80) DEFAULT NULL,
   `timeout` int(11) DEFAULT 30,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,7 +104,6 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (4,'testUser','$2y$10$Tfdqf5MDOfA0fdGru6v5WuCFunBpYWZ57v/h3jLkrconwKTcIIgKm','active','bef5dace562f3f85ce59dedf8f481de0225ba07b89e8ed5bfd','2021-02-07 13:38:50','2021-02-07 12:39:23','0000-00-00 00:00:00','192.168.1.162',50);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -160,4 +158,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-07 22:03:36
+-- Dump completed on 2021-02-10  1:41:53
