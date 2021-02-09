@@ -33,7 +33,7 @@ protected $fileLoc;
     }
     
     //hardcoding the $_FILES to require ['file'] in the upper level
-    if(!is_array($_FILES)||!array_key_exists('file', $_FILES)){
+    if(!file_exists($fLoc)){
       $rtrn['msg']="File upload failed or not uploaded with expected variables";
       return $rtrn;
     }
@@ -48,7 +48,7 @@ protected $fileLoc;
     $exArr=explode('.',$fnm);
     $fname=uniqid().'.'.end($exArr);//generating filename
 
-    if(!move_uploaded_file($_FILES['file']["tmp_name"], $this->fileLoc.$fname)){
+    if(!move_uploaded_file($fLoc, $this->fileLoc.$fname)){
       $rtrn['msg']="Upload failed when moving file to destination";
       return $rtrn;
     }
@@ -105,6 +105,10 @@ protected $fileLoc;
   sends out the image in binary
   -------------------------------*/
   public function getPic($id){
+    if(!is_numeric($id)){
+    error_log("attempted to get file with id: ".$this->escape($id).", value is not a number.");
+    die();
+    }
     $img=$this->read('select id, datetime, filePath,format from img where id='.$this->escape($id));
     if(!$img){
     error_log("attempted to get file with id: ".$this->escape($id).", file doesn't exist.");

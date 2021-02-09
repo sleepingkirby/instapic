@@ -12,12 +12,13 @@ final class AuthTest extends TestCase
       require("./config/auth_cnf.php");
       require("./config/mariadb_cnf.php");
       $auth=new auth($_db['user'], $_db['pass'], $_db['db'], $_db['host'], $_auth['tknLen'], $_auth['status']);
+      $out=$auth->register('autotestuser','autotestpass','active',50);
       $out=$auth->login('autotestuser','autotestpass');
       $this->assertTrue($out['status']);//true
       $out=$auth->login('badusername','badpassword');
-      $this->assertFalse($out['status']);//bad username
+      $this->assertFalse($out['status'],$out['msg']);//bad username
       $out=$auth->login('autotestuser','badpassword');
-      $this->assertFalse($out['status']);//bad password
+      $this->assertFalse($out['status'],$out['msg']);//bad password
     }
 
     public function testLoggedIn(): void
@@ -29,7 +30,7 @@ final class AuthTest extends TestCase
       $out=$auth->loggedIn('autotestuser',$userInfo['tkn']);
       $this->assertTrue($out['status']);//true 
       $out=$auth->loggedIn('autotestuser','badtoken');
-      $this->assertFalse($out['status']);//bad token
+      $this->assertFalse($out['status'],$out['msg']);//bad token
     }
 
     public function testLogOut(): void
@@ -39,9 +40,9 @@ final class AuthTest extends TestCase
       $auth=new auth($_db['user'], $_db['pass'], $_db['db'], $_db['host'], $_auth['tknLen'], $_auth['status']);
       $userInfo=$auth->login('autotestuser','autotestpass');
       $out=$auth->logout('',$userInfo['tkn']);
-      $this->assertFalse($out['status']);//no username
+      $this->assertFalse($out['status'],$out['msg']);//no username
       $out=$auth->logout('asdfasdfasdfasdfasdfadsfasdfese','badtoken');
-      $this->assertFalse($out['status']);//bad username
+      $this->assertFalse($out['status'],$out['msg']);//bad username
       $out=$auth->logout('autotestuser',$userInfo['tkn']);
       $this->assertTrue($out['status']);//true
     }
