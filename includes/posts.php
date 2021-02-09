@@ -53,7 +53,7 @@ protected $fileLoc;
       return $rtrn;
     }
     
-    $status=$this->write('insert into img(usersId, filePath, format, title, descrip, tags, datetime) values('.$userInfo[0]['id'].', "'.$this->fileLoc.$fname.'","'.strtolower(end($exArr)).'","'.$title.'", "'.$descr.'", "'.$tags.'", current_timestamp())');
+    $status=$this->write('insert into img(usersId, filePath, format, title, descrip, tags, datetime) values('.$userInfo[0]['id'].', "'.$this->fileLoc.$fname.'","'.strtolower(end($exArr)).'","'.$this->escape($title).'", "'.$this->escape($descr).'", "'.$this->escape($tags).'", current_timestamp())');
 
     if(!$status){
     $rtrn['msg']="File uploaded, but unable to make entry in database.";
@@ -75,11 +75,6 @@ protected $fileLoc;
   public function get($filter){
     $rtrn['status']=false;
     $rtrn['msg']="Unable able to get images";
-    ob_start();
-    var_dump($filter);
-    $out=ob_get_clean();
-    error_log("============>");
-    error_log($out); 
  
     $stmnt="select id,usersId,userName,format,title,descrip,tags,datetime from view_img";
     $sub="";
@@ -93,8 +88,6 @@ protected $fileLoc;
       }
       $status=$this->read($stmnt.$sub);
       
-      error_log($stmnt.$sub);
-
       if($status==false){
         $rtrn['msg']="Unable to retrieve from database.";
         return $rtrn;

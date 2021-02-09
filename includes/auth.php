@@ -1,5 +1,4 @@
 <?php
-require('./includes/mariadb.php');
 
 class auth extends sqlClass{
 public $tknLen;
@@ -59,10 +58,15 @@ public $statusArr;
       return $rtrn;
     }
 
+
+    $ip='127.0.0.1';
+    if(array_key_exists('REMOTE_ADDR', $_SERVER)){
+    $ip=$_SERVER['REMOTE_ADDR'];
+    }
  
     if(password_verify($p, $userInfo[0]['password'])){
       $tkn=$this->genTkn();
-      $back=$this->write("update users set datetime=current_timestamp(), ip=\"".$_SERVER['REMOTE_ADDR']."\", last_login=current_timestamp(), token=\"".$tkn."\" where id=".$this->escape($userInfo[0]['id']));
+      $back=$this->write("update users set datetime=current_timestamp(), ip=\"".$ip."\", last_login=current_timestamp(), token=\"".$tkn."\" where id=".$this->escape($userInfo[0]['id']));
         if($back==false){
         $rtrn['status']=false;
         $rtrn['msg']=$this->obj->error;
@@ -144,9 +148,13 @@ public $statusArr;
       return $rtrn;
     }
 
+    $ip='127.0.0.1';
+    if(array_key_exists('REMOTE_ADDR', $_SERVER)){
+    $ip=$_SERVER['REMOTE_ADDR'];
+    }
+
     //username is right, but token is wrong. Can be a spoofing attempt. Do nothing. Tell the attempt that 
-    
-    if($userInfo[0]['token']!=$tkn || $userInfo[0]['ip']!=$_SERVER['REMOTE_ADDR']){
+    if($userInfo[0]['token']!=$tkn || $userInfo[0]['ip']!=$ip){
       $rtrn['msg']="Session not valid.";
       return $rtrn;
     }
@@ -160,7 +168,7 @@ public $statusArr;
     }
 
     //why explicitly match? Because I'm paranoid. This also guarantees that the logic is solid and I'm not missing edge cases.
-    if($userInfo[0]['token']==$tkn && $userInfo[0]['ip']==$_SERVER['REMOTE_ADDR'] && (time() < $userInfo[0]['datetime']+($userInfo[0]['timeout']*60))){
+    if($userInfo[0]['token']==$tkn && $userInfo[0]['ip']==$ip && (time() < $userInfo[0]['datetime']+($userInfo[0]['timeout']*60))){
       $back=$this->write('update users set datetime=current_timestamp() where id='.$userInfo[0]['id']);
       if($back==false){
         $rtrn['msg']="Keep alive failed.";
